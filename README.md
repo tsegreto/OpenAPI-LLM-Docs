@@ -15,16 +15,30 @@ npm install openapi-llm-docs
 ```typescript
 import express from 'express';
 import { createOpenAPILLMDocsMiddleware } from 'openapi-llm-docs';
-import * as fs from 'fs';
 
 const app = express();
 
-// Load your OpenAPI spec
-const spec = JSON.parse(fs.readFileSync('./openapi.json', 'utf8'));
+/**
+ * @openapi
+ * /users:
+ *   get:
+ *     summary: Get all users
+ *     description: Returns a list of all users
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *         description: Page number
+ *         example: 1
+ */
+app.get('/users', (req, res) => {
+  // Your route handler
+});
 
-// Add the middleware
+// Add the middleware after your routes
 app.use(createOpenAPILLMDocsMiddleware({
-  spec,
+  spec: app, // Pass your Express app instance
   path: '/docs-llm',
   includeExamples: true,
   format: 'plain',
