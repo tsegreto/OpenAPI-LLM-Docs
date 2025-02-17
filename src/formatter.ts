@@ -75,7 +75,17 @@ export class OpenAPILLMFormatter {
 	private formatEndpoint(path: string, methods: any): string {
 		let output = `Endpoint: ${path}\n\n`;
 
+		// Add null check for methods
+		if (!methods) {
+			return output;
+		}
+
 		Object.entries(methods).forEach(([method, details]: [string, any]) => {
+			// Skip if details is null or undefined
+			if (!details) {
+				return;
+			}
+
 			// Skip deprecated endpoints if not included
 			if (!this.options.includeDeprecated && details.deprecated) {
 				return;
@@ -91,7 +101,7 @@ export class OpenAPILLMFormatter {
 			}
 
 			// Request Body
-			if (details.requestBody) {
+			if (details.requestBody?.content?.["application/json"]) {
 				output += "Request Body:\n";
 				const content = details.requestBody.content["application/json"];
 				if (content?.schema) {
@@ -100,13 +110,17 @@ export class OpenAPILLMFormatter {
 			}
 
 			// Responses
-			output += "Responses:\n";
-			Object.entries(details.responses).forEach(([code, response]: [string, any]) => {
-				output += `- ${code}: ${(response as any).description}\n`;
-				if ((response as any).content?.["application/json"]?.schema) {
-					output += this.formatSchema((response as any).content["application/json"].schema);
-				}
-			});
+			if (details.responses) {
+				output += "Responses:\n";
+				Object.entries(details.responses).forEach(([code, response]: [string, any]) => {
+					if (response) {
+						output += `- ${code}: ${(response as any).description || "No description"}\n`;
+						if ((response as any).content?.["application/json"]?.schema) {
+							output += this.formatSchema((response as any).content["application/json"].schema);
+						}
+					}
+				});
+			}
 
 			output += "---\n\n";
 		});
