@@ -1,0 +1,40 @@
+{
+  "name": "openapi-llm-docs",
+  "version": "1.0.0",
+  "description": "Convert OpenAPI specifications to LLM-friendly documentation format",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "openapi",
+    "llm",
+    "documentation",
+    "swagger",
+    "ai"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/js-yaml": "^4.0.9",
+    "@types/node": "^22.13.2",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.7.3"
+  },
+  "peerDependencies": {
+    "express": "^4.21.2"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ]
+}
