@@ -1,6 +1,6 @@
-# OpenAPI LLM Docs
+# openapi-llm-docs
 
-Convert OpenAPI/Swagger specifications into LLM-friendly documentation format. This package provides both a standalone formatter and Express middleware for serving OpenAPI documentation in a format optimized for Large Language Models (LLMs).
+Convert OpenAPI specifications to LLM-friendly documentation format. This package converts OpenAPI/Swagger specifications into a clear, consistent format that's easy for Large Language Models (LLMs) to process and understand. This package provides both a standalone formatter and Express middleware for serving OpenAPI documentation in a format optimized for Large Language Models (LLMs).
 
 ## Installation
 
