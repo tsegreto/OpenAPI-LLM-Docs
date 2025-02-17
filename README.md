@@ -15,20 +15,20 @@ npm install openapi-llm-docs
 ```typescript
 import express from 'express';
 import { createOpenAPILLMDocsMiddleware } from 'openapi-llm-docs';
-import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 
 const app = express();
 
 // Load your OpenAPI spec
-const spec = yaml.load(fs.readFileSync('./openapi.yaml', 'utf8'));
+const spec = JSON.parse(fs.readFileSync('./openapi.json', 'utf8'));
 
 // Add the middleware
 app.use(createOpenAPILLMDocsMiddleware({
   spec,
   path: '/docs-llm',
   includeExamples: true,
-  format: 'plain'
+  format: 'plain',
+  requireDescription: true // Only include documented items
 }));
 ```
 
@@ -36,17 +36,17 @@ app.use(createOpenAPILLMDocsMiddleware({
 
 ```typescript
 import { OpenAPILLMFormatter } from 'openapi-llm-docs';
-import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 
 // Load your OpenAPI spec
-const spec = yaml.load(fs.readFileSync('./openapi.yaml', 'utf8'));
+const spec = JSON.parse(fs.readFileSync('./openapi.json', 'utf8'));
 
 // Create formatter instance
 const formatter = new OpenAPILLMFormatter({
   includeExamples: true,
   includeDeprecated: false,
-  format: 'plain'
+  format: 'plain',
+  requireDescription: true // Only include documented items
 });
 
 // Format the spec
@@ -61,6 +61,7 @@ console.log(formattedDocs);
 - `includeExamples` (boolean, default: true): Include example values in the output
 - `includeDeprecated` (boolean, default: false): Include deprecated endpoints
 - `format` ('plain' | 'markdown', default: 'plain'): Output format
+- `requireDescription` (boolean, default: false): Only include endpoints, parameters, schemas, and properties that have descriptions. Useful for reducing token usage and ensuring complete documentation.
 
 ### Middleware Options
 
