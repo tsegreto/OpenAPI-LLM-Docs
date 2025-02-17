@@ -26,13 +26,9 @@
   },
   "homepage": "https://github.com/tsegreto/openapi-llm-docs#readme",
   "license": "MIT",
-  "dependencies": {
-    "js-yaml": "^4.1.0"
-  },
   "devDependencies": {
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.0",
-    "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.13.2",
     "jest": "^29.5.0",
     "openapi-types": "^12.1.3",
