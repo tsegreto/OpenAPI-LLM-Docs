@@ -1,6 +1,6 @@
 {
   "name": "openapi-llm-docs",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Convert OpenAPI specifications to LLM-friendly documentation format",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
