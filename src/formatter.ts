@@ -5,6 +5,7 @@ export interface FormatterOptions {
 	includeExamples?: boolean;
 	includeDeprecated?: boolean;
 	format?: "plain" | "markdown";
+	requireDescription?: boolean;
 }
 
 export class OpenAPILLMFormatter {
@@ -15,11 +16,17 @@ export class OpenAPILLMFormatter {
 			includeExamples: true,
 			includeDeprecated: false,
 			format: "plain",
+			requireDescription: false,
 			...options,
 		};
 	}
 
 	private formatSchema(schema: any, name?: string): string {
+		// Skip if description is required but missing
+		if (this.options.requireDescription && !schema.description) {
+			return "";
+		}
+
 		let output = "";
 
 		if (name) {
@@ -37,6 +44,10 @@ export class OpenAPILLMFormatter {
 		if (schema.properties) {
 			output += "\nProperties:\n";
 			Object.entries(schema.properties).forEach(([propName, prop]: [string, any]) => {
+				// Skip properties without descriptions if required
+				if (this.options.requireDescription && !prop.description) {
+					return;
+				}
 				output += `- ${propName}:\n`;
 				output += `  Type: ${prop.type || "any"}\n`;
 				if (prop.description) output += `  Description: ${prop.description}\n`;
@@ -59,6 +70,10 @@ export class OpenAPILLMFormatter {
 
 		let output = "Parameters:\n";
 		parameters.forEach((param) => {
+			// Skip parameters without descriptions if required
+			if (this.options.requireDescription && !param.description) {
+				return;
+			}
 			output += `- ${param.name} (${param.in}):\n`;
 			output += `  Description: ${param.description || "No description"}\n`;
 			output += `  Required: ${param.required ? "Yes" : "No"}\n`;
@@ -75,14 +90,17 @@ export class OpenAPILLMFormatter {
 	private formatEndpoint(path: string, methods: any): string {
 		let output = `Endpoint: ${path}\n\n`;
 
-		// Add null check for methods
 		if (!methods) {
 			return output;
 		}
 
 		Object.entries(methods).forEach(([method, details]: [string, any]) => {
-			// Skip if details is null or undefined
 			if (!details) {
+				return;
+			}
+
+			// Skip if description is required but missing
+			if (this.options.requireDescription && !details.description) {
 				return;
 			}
 
@@ -114,6 +132,10 @@ export class OpenAPILLMFormatter {
 				output += "Responses:\n";
 				Object.entries(details.responses).forEach(([code, response]: [string, any]) => {
 					if (response) {
+						// Skip responses without descriptions if required
+						if (this.options.requireDescription && !(response as any).description) {
+							return;
+						}
 						output += `- ${code}: ${(response as any).description || "No description"}\n`;
 						if ((response as any).content?.["application/json"]?.schema) {
 							output += this.formatSchema((response as any).content["application/json"].schema);
